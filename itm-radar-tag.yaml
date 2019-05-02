@@ -10,105 +10,86 @@ import-stylebooks:
     namespace: netscaler.nitro.config
     prefix: ns
     version: "11.0"
-  -
-    namespace: com.citrix.adc.commontypes
-    prefix: cmtypes
-    version: "1.0"
-  -
-    namespace: com.citrix.adc.stylebooks
-    prefix: stlb
-    version: "1.0"
 parameters:
   -
     name: itm-radar-tag
     label: Citrix ITM Radar Tag
     description: |
-       <h1>Citrix Intelligence Traffic Manager Tag</h1>
-       <table width=60%>
-         <tr>
-            <td>
-                <a href="https://www.citrix.com/products/citrix-intelligent-traffic-management" target="_blank">
-                  <img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png">
-                </a>
-            </td>
-            <td>
-              This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligence Traffic
-              Manager Radar JavaScript tags and binds them to a specified VServer</td></tr><tr><td colspan=2>fields with an * are
-              required
-            </td>
-        </tr>
-       </table>
+     <h1>Citrix Intelligence Traffic Manager Tag</h1>
+     <table width=60%>
+     <tr>
+        <td><a href="https://www.citrix.com/products/citrix-intelligent-traffic-management" target="_blank"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></a></td>
+        <td>This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligence Traffic Manager Radar JavaScript tags and binds them to a specified VServer</td>
+     </tr>
+     <tr>
+        <td colspan=2>fields with an * are required</td>
+     </tr>
+     </table>
     type: object
     required: true
     parameters:
-     -
-      name: tagid
-      label: ITM Radar Tag ID
-      description: |
-       Input the Customer ID for your Radar Tag which can be found in your citrix.cloud.com <a href="https://itm.cloud.com/ui/radar/tag">ITM Management portal</a>
-      type: string
-      key: true
-      gui:
-        updatable: true
-      required: true
-     -
-      name: tagtype
-      label: ITM Radar Tag type
-      description: |
-        <table style="width:80%;border-spacing: 1px;border: 1px solid black;">
-          <caption>Type Legend</caption>
-          <tr style="color: white;background-color: black;">
-            <th>Tag Type</th>
-            <th>Description</th>
-          </tr>
-          <tr>
-            <td>Default Radar Tag</td>
-            <td>This is the recommended version of the Radar tag. This version waits until the load event is complete before
-                downloading and executing the Radar Client, ensuring that the load event is uninterrupted
-            </td>
-          </tr>
-          <tr>
-            <td>Pre-loading Radar Tag</td>
-            <td>his version of the tag keeps the download of the Radar Client from blocking further parsing of the page,
-                but executes it before the load event has fired. It is mainly for customers using Content Security Policy
-                settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin,
-                where the Radar Client needs to load as early as possible.
-            </td>
-          </tr>
-        </table>
-      type: string
-      allowed-values:
-       - "Default"
-       - "Pre-loading"
-      default: "Default"
-      required: true
-     -
-      name: tag-rw-policy
-      label: Rewrite Policy
-      description: The conditions which need to be met to invoke the rewrite policy that inserts the radar tag
-      type: string
-      default: HTTP.RES.HEADER("Content-Type").TO_LOWER.CONTAINS("text/html")
-      required: true
+      -
+        name: tagid
+        label: ITM Radar Tag ID
+        description: |
+         Input the Customer ID for your Radar Tag which can be found in your citrix.cloud.com <a href="https://itm.cloud.com/ui/radar/tag">ITM Management portal</a>
+        type: string
+        key: true
+        gui:
+         updatable: true
+        required: true
+      -
+        name: tagtype
+        label: ITM Radar Tag type
+        description: |
+         <table style="width:80%;border-spacing: 1px;border: 1px solid black;">
+         <caption>Type Legend</caption>
+         <tr style="color: white;background-color: black;">
+           <th>Tag Type</th>
+           <th>Description</th>
+         </tr>
+         <tr>
+           <td>Default Radar Tag</td>
+           <td>This is the recommended version of the Radar tag. This version waits until the load event is complete before downloading and executing the Radar Client, ensuring that the load event is uninterrupted</td>
+         </tr>
+         <tr>
+          <td>Pre-loading Radar Tag</td>
+          <td>his version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td>
+         </tr>
+         </table>
+        type: string
+        allowed-values:
+         - "Default"
+         - "Pre-loading"
+        default: "Default"
+        required: true
+      -
+        name: tag-rw-policy
+        label: Rewrite Policy
+        description: The conditions which need to be met to invoke the rewrite policy that inserts the radar tag
+        type: string
+        default: HTTP.RES.HEADER("Content-Type").TO_LOWER.CONTAINS("text/html")
+        required: true
   -
     name: vserver-binding
-    label: ADC VServer binding
-    description: Bind to Existing VServer?
+    label: Bind to VServer
+    description: Specify the VServer object you want to bind this policy to.  Typically this is the VServer fronting the application you wish to influence with RUM
     type: object
     required: false
     parameters:
-     -
-       name: vserver-name
-       label: Virtual Server Name
-       description: Exact virtual server name to which the rewrite policy is bound
-       type: string
-       required: true
-     -
-       name: bind-priority
-       label: VServer Binding Priority
-       description: The priority to use when binding the policy to the specified VServer
-       type: number
-       default: 100
-       required: true
+      -
+        name: vserver-name
+        label: Virtual Server Name
+        description: Exact virtual server name to which the rewrite policy is bound
+        type: string
+        required: true
+      -
+        name: bind-priority
+        label: VServer Binding Priority
+        description: The priority to use when binding the policy to the specified VServer
+        type: number
+        default: 100
+        required: true
 components:
   -
     name: rewrite-enable-feature-comp
@@ -121,7 +102,7 @@ components:
   -
     name: rewrite-action-default
     type: ns::rewriteaction
-    condition: $parameters.vserver-binding.vserver-type == "Default"
+    condition: $parameters.itm-radar-tag.tagtype == "Default"
     properties:
       name: "itm-radar-rewrite-action"
       type: replace_all
@@ -140,7 +121,7 @@ components:
   -
     name: rewrite-action-preload
     type: ns::rewriteaction
-    condition: $parameters.vserver-binding.vserver-type == "Pre-loading"
+    condition: $parameters.itm-radar-tag.tagtype == "Pre-loading"
     properties:
        name: "itm-radar-rewrite-action"
        type: replace_all
@@ -156,7 +137,7 @@ components:
     properties:
       name: "itm-radar-rewrite-policy"
       rule: $parameters.itm-radar-tag.tag-rw-policy
-      action: if-then-else($parameters.vserver-binding.vserver-type == "Default", $components.rewrite-action-default.properties.name, $components.rewrite-action-preload.properties.name)
+      action: if-then-else($parameters.itm-radar-tag.tagtype == "Default", $components.rewrite-action-default.properties.name, $components.rewrite-action-preload.properties.name)
   -
     name: rewrite-policy-binding-lb
     type: ns::lbvserver_rewritepolicy_binding
