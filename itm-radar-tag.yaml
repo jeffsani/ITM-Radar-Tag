@@ -23,95 +23,150 @@ parameters:
     name: itm-radar-tag
     label: Citrix ITM Radar Tag
     description: |
-     <h1>Citrix Intelligence Traffic Manager Tag</h1><table width=60%"><tr><td><a href="https://www.citrix.com/products/citrix-intelligent-traffic-management/" target="_blank"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></a></td><td>This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligence Traffic Manager Radar JavaScript tags and binds them to a specified VServer</td></tr><tr><td colspan=2>fields with an * are required</td></tr></table>
+       <h1>Citrix Intelligence Traffic Manager Tag</h1>
+       <table width=60%>
+         <tr>
+            <td>
+                <a href="https://www.citrix.com/products/citrix-intelligent-traffic-management" target="_blank">
+                  <img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png">
+                </a>
+            </td>
+            <td>
+              This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligence Traffic
+              Manager Radar JavaScript tags and binds them to a specified VServer</td></tr><tr><td colspan=2>fields with an * are
+              required
+            </td>
+        </tr>
+       </table>
     type: object
     required: true
     parameters:
      -
-       name: tagid
-       label: ITM Radar Tag ID
-       description: |
-         Input the Customer ID for your Radar Tag which can be found in your citrix.cloud.com <a href="https://itm.cloud.com/ui/radar/tag">ITM Management portal</a>
-       type: string
-       key: true
-       gui:
+      name: tagid
+      label: ITM Radar Tag ID
+      description: |
+       Input the Customer ID for your Radar Tag which can be found in your citrix.cloud.com <a href="https://itm.cloud.com/ui/radar/tag">ITM Management portal</a>
+      type: string
+      key: true
+      gui:
         updatable: true
-       required: true
+      required: true
      -
-       name: tagtype
-       label: ITM Radar Tag type
-       description: |
+      name: tagtype
+      label: ITM Radar Tag type
+      description: |
         <table style="width:80%;border-spacing: 1px;border: 1px solid black;">
-         <caption>Type Legend</caption>
-         <tr style="color: white;background-color: black;">
-          <th>Tag Type</th>
-          <th>Description</th>
-         </tr>
-         <tr><td>Default Radar Tag</td><td>This is the recommended version of the Radar tag. This version waits until the load event is complete before downloading and executing the Radar Client, ensuring that the load event is uninterrupted</td></tr>
-         <tr><td>Pre-loading Radar Tag</td><td>his version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td></tr>
+          <caption>Type Legend</caption>
+          <tr style="color: white;background-color: black;">
+            <th>Tag Type</th>
+            <th>Description</th>
+          </tr>
+          <tr>
+            <td>Default Radar Tag</td>
+            <td>This is the recommended version of the Radar tag. This version waits until the load event is complete before
+                downloading and executing the Radar Client, ensuring that the load event is uninterrupted
+            </td>
+          </tr>
+          <tr>
+            <td>Pre-loading Radar Tag</td>
+            <td>his version of the tag keeps the download of the Radar Client from blocking further parsing of the page,
+                but executes it before the load event has fired. It is mainly for customers using Content Security Policy
+                settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin,
+                where the Radar Client needs to load as early as possible.
+            </td>
+          </tr>
         </table>
-       type: string
-       allowed-values:
-         - "Default Radar Tag"
-         - "Pre-loading Radar Tag"
-       default: "Default Radar Tag"
-       required: true
+      type: string
+      allowed-values:
+       - "Default"
+       - "Pre-loading"
+      default: "Default"
+      required: true
+     -
+      name: tag-rw-policy
+      label: Rewrite Policy
+      description: The conditions which need to be met to invoke the rewrite policy that inserts the radar tag
+      type: string
+      default: HTTP.RES.HEADER("Content-Type").TO_LOWER.CONTAINS("text/html")
+      required: true
+  -
     name: vserver-binding
     label: ADC VServer binding
-    description: |
-      Bind to Existing VServer?
+    description: Bind to Existing VServer?
     type: object
     required: false
     parameters:
      -
-      name: vserver-name
-      label: Virtual Server Name
-      description: Exact virtual server name to which the rewrite policy is bound
-      type: string
-      required: true
-    -
-      name: vserver-type
-      label: Virtual Server Type
-      description: The type of VServer entity to bind to - LB or CS
-      type: string
-      required: true
-      allowed-values:
-         - "LB"
-         - "CS"
-       default: "LB"
+       name: vserver-name
+       label: Virtual Server Name
+       description: Exact virtual server name to which the rewrite policy is bound
+       type: string
+       required: true
+     -
+       name: bind-priority
+       label: VServer Binding Priority
+       description: The priority to use when binding the policy to the specified VServer
+       type: number
+       default: 100
+       required: true
 components:
   -
-   name: rewrite-enable-feature-comp
-   type: ns::nsfeature
-   description: Enables the REWRITE feature on Citrix ADC
-   meta-properties:
+    name: rewrite-enable-feature-comp
+    type: ns::nsfeature
+    description: Enables the REWRITE feature on Citrix ADC
+    meta-properties:
       action: enable
-   properties:
+    properties:
       feature: ["rewrite"]
   -
-   name: rewrite-action
-   type: ns::rewriteaction
-   properties:
-     name: "itm-radar-rewrite-action"
-     type: insert_after
-     target: $substitutions.policy-rule("HTTP.REQ.COOKIE.VALUE", $parameters.cookie-name)
-     stringbuilderexpr: $substitutions.str-esc($parameters.cookie-postfix)
-  -
-   name: rewrite-policy
-   type: ns::rewritepolicy
-   properties:
-     name: "%{$parameters.appname}%-exch-rewrite-policy"
-     rule: $substitutions.policy-rule("HTTP.REQ.URL.CONTAINS", $parameters.url-string)
-     action: $components.rewrite-action.properties.name
-  -
-    name: rewrite-policy-binding
-    type: ns::lbvserver_rewritepolicy_binding
-    condition: $parameters.vserver-binding
+    name: rewrite-action-default
+    type: ns::rewriteaction
+    condition: $parameters.vserver-binding.vserver-type == "Default"
     properties:
-      name: $parameters.vserver-name
+      name: "itm-radar-rewrite-action"
+      type: replace_all
+      target: str(HTTP.RES.BODY) + "(" + HTTP.RES.CONTENT_LENGTH + ")" + ")"
+      stringbuilderexpr: >-
+        str("<script>/r/n if (") + "typeof window.addEventListener === \"function\"" + ") {/r/n  window.addEventListener(\"load\", function()) {" + "/r/n" +
+        "if window.cedexis === undefined" + " {/r/n" +
+        "var radar = document.createElement(\"script\");/r/n" +
+        "radar.src = \"//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js\";/r/n" +
+        "document.body.appendChild(radar);/r/n" +
+        "}/r/n" +
+        "});/r/n" +
+        "}/r/n" +
+        "</script>\r\n</body>"
+      search: str("text(") + "\"" + str(</body>) + "\"" + ")"
+  -
+    name: rewrite-action-preload
+    type: ns::rewriteaction
+    condition: $parameters.vserver-binding.vserver-type == "Pre-loading"
+    properties:
+       name: "itm-radar-rewrite-action"
+       type: replace_all
+       target: str("HTTP.RES.BODY(") + str("HTTP.RES.CONTENT_LENGTH)")
+       stringbuilderexpr: >-
+        str("<script async src=\"//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + str("/radar.js\">") +
+        "</script>\r\n</body>"
+       search: str("text(\"</body>\")")
+  -
+    name: rewrite-policy
+    type: ns::rewritepolicy
+    description: The rewrite policy uses the default or preload action based on user selected radar tag type
+    properties:
+      name: "itm-radar-rewrite-policy"
+      rule: $parameters.itm-radar-tag.tag-rw-policy
+      action: if-then-else($parameters.vserver-binding.vserver-type == "Default", $components.rewrite-action-default.properties.name, $components.rewrite-action-preload.properties.name)
+  -
+    name: rewrite-policy-binding-lb
+    type: ns::lbvserver_rewritepolicy_binding
+    properties:
+      name: $parameters.vserver-binding.vserver-name
       policyname: $components.rewrite-policy.properties.name
-      priority: 100
+      priority: $parameters.vserver-binding.bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
 outputs:
   -
+    name: itm-radar-rw-policy
+    value: $components.rewrite-policy
