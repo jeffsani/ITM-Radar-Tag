@@ -28,6 +28,9 @@ parameters:
         <td><font size="3" face="arial">Hundreds of millions of clients generate over <strong>14 billion RUM data points</strong> every day.</font></td>
      </tr>
      <tr>
+        <td colspan="3"><hr/></td>
+     </tr>
+     <tr>
         <td colspan="3">This stylebook creates a Rewrite policy and action on ADC which can be used ot inject the Citrix Intelligent Traffic Manager (ITM) Real User Measurement JavaScript tag.  You can optionally bind the generated policy to a specific VServer</td>
      </tr>
      <tr>
