@@ -156,7 +156,7 @@ components:
     properties:
       name: "itm-radar-rewrite-policy"
       rule: $parameters.itm-radar-tag.tag-rw-policy
-      action: if-then-else($parameters.itm-radar-tag.tagtype == "Default", $components.rewrite-action-default.properties.name, $components.rewrite-action-preload.properties.name)
+      action: if-then-else($parameters.itm-radar-tag.tagtype == "Pre-loading", if-then-else($parameters.itm-radar-tag.tagtype != "Default", $components.rewrite-action-preload.properties.name), $components.rewrite-action-default.properties.name)
   -
     name: rewrite-policy-binding-lb
     type: ns::lbvserver_rewritepolicy_binding
