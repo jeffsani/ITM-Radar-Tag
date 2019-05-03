@@ -50,18 +50,18 @@ parameters:
         label: ITM Radar Tag type
         description: |
          <table style="border-spacing: 1px;border: 1px solid black;">
-         <caption>Radara Tag Type Legend</caption>
+         <caption>Radar Tag Type Legend</caption>
          <tr style="color: white;background-color: black;">
-           <th>Tag Type</th>
-           <th>Description</th>
+           <th width="30%">Tag Type</th>
+           <th width="70%">Description</th>
          </tr>
          <tr>
-           <td>Default Radar Tag</td>
-           <td>This is the recommended version of the Radar tag. This version waits until the load event is complete before downloading and executing the Radar Client, ensuring that the load event is uninterrupted</td>
+           <td width="30%">Default Radar Tag</td>
+           <td width="70%">This is the recommended version of the Radar tag. This version waits until the load event is complete before downloading and executing the Radar Client, ensuring that the load event is uninterrupted</td>
          </tr>
          <tr>
-          <td>Pre-loading Radar Tag</td>
-          <td>This version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td>
+          <td width="30%">Pre-loading Radar Tag</td>
+          <td width="70%>This version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td>
          </tr>
          </table>
         type: string
@@ -79,7 +79,7 @@ parameters:
         required: true
   -
     name: vserver-binding
-    label: Bind to VServer
+    label: VServer Binding (optional)
     description: Specify the VServer object you want to bind this policy to.  Typically this is the VServer fronting the application you wish to influence with RUM
     type: object
     required: false
