@@ -3,7 +3,7 @@ name: itm-radar-tag
 namespace: com.citrix.adc.stylebooks
 version: "1.0"
 display-name: "Citrix ITM Radar Tag"
-description: "This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligent Traffic Manager Radar JavaScript tags and binds them to a specified VServer"
+description: "This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligent Traffic Manager Real User Measurement JavaScript tag"
 schema-version: "1.0"
 import-stylebooks:
   -
@@ -28,13 +28,13 @@ parameters:
         <td><font size="3" face="arial">Hundreds of millions of clients generate over <strong>14 billion RUM data points</strong> every day.</font></td>
      </tr>
      <tr>
-        <td colspan="3">This stylebook creates a rewrite policy and action on ADC which can be used ot inject the Citrix Intelligent Traffic Manager (ITM) Radar JavaScript tag.  You can optionally bind the generated policy to a specific VServer</td>
+        <td colspan="3">This stylebook creates a Rewrite policy and action on ADC which can be used ot inject the Citrix Intelligent Traffic Manager (ITM) Real User Measurement JavaScript tag.  You can optionally bind the generated policy to a specific VServer</td>
      </tr>
      <tr>
         <td colspan="3">For more infomration about the ITM Radar Tag, see the ITM documenation <a href="https://docs.citrix.com/en-us/citrix-intelligent-traffic-management/radar.html" target="_blank">here</a>.  For more information about Citrix ITM click <a href="https://www.citrix.com/products/citrix-intelligent-traffic-management/" target="_blank">here</a></td>
      </tr>
      <tr>
-        <td colspan=3>fields with an * are required</td>
+        <td colspan=3>If the Rewrite feature is not enabled, this StyleBook will first enable the feature prior to creating the policy and action. Fields marked with an * are required</td>
      </tr>
      </table>
     type: object
