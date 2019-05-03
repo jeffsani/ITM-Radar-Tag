@@ -16,7 +16,7 @@ parameters:
     label: Citrix ITM Radar Tag
     description: |
      <h1>Citrix ITM Radar Tag</h1>
-     <table cellpadding="2">
+     <table cellpadding="2" width="70%">
      <tr>
         <td><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
         <td><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
