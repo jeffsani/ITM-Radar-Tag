@@ -103,6 +103,16 @@ parameters:
         type: string
         required: true
       -
+        name: vserver-type
+        label: VServer Type
+        description: Type of Virtual Server the policy will be bound to
+        type: string
+        allowed-values:
+         - "LB"
+         - "CS"
+        default: "LB"
+        required: true
+      -
         name: bind-priority
         label: VServer Binding Priority
         description: The priority to use when binding the policy to the specified VServer
@@ -160,6 +170,17 @@ components:
   -
     name: rewrite-policy-binding-lb
     type: ns::lbvserver_rewritepolicy_binding
+    condition: $parameters.vserver-binding.vserver.type == "LB"
+    properties:
+      name: $parameters.vserver-binding.vserver-name
+      policyname: $components.rewrite-policy.properties.name
+      priority: str($parameters.vserver-binding.bind-priority)
+      gotopriorityexpression: END
+      bindpoint: RESPONSE
+  -
+    name: rewrite-policy-binding-lb
+    type: ns::csvserver_rewritepolicy_binding
+    condition: $parameters.vserver-binding.vserver.type =="CS"
     properties:
       name: $parameters.vserver-binding.vserver-name
       policyname: $components.rewrite-policy.properties.name
