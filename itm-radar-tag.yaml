@@ -170,7 +170,7 @@ components:
   -
     name: rewrite-policy-binding-lb
     type: ns::lbvserver_rewritepolicy_binding
-    condition: $parameters.vserver-binding.vserver.type == "LB"
+    condition: $parameters.vserver-binding.vserver-type == "LB"
     properties:
       name: $parameters.vserver-binding.vserver-name
       policyname: $components.rewrite-policy.properties.name
@@ -180,7 +180,7 @@ components:
   -
     name: rewrite-policy-binding-cs
     type: ns::csvserver_rewritepolicy_binding
-    condition: $parameters.vserver-binding.vserver.type == "CS"
+    condition: $parameters.vserver-binding.vserver-type == "CS"
     properties:
       name: $parameters.vserver-binding.vserver-name
       policyname: $components.rewrite-policy.properties.name
