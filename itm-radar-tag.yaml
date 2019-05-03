@@ -3,7 +3,7 @@ name: itm-radar-tag
 namespace: com.citrix.adc.stylebooks
 version: "1.0"
 display-name: "Citrix ITM Radar Tag"
-description: "This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligence Traffic Manager Radar JavaScript tags and binds them to a specified VServer"
+description: "This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligent Traffic Manager Radar JavaScript tags and binds them to a specified VServer"
 schema-version: "1.0"
 import-stylebooks:
   -
@@ -15,16 +15,21 @@ parameters:
     name: itm-radar-tag
     label: Citrix ITM Radar Tag
     description: |
-     <h1>Citrix Intelligence Traffic Manager Tag</h1>
-     <table width=60%>
+     <h1>Citrix ITM Radar Tag</h1>
+     <table cellpadding="2">
      <tr>
-        <td><a href="https://www.citrix.com/products/citrix-intelligent-traffic-management" target="_blank"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/14b-rum-data.png"></a></td>
+        <td><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
+        <td><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
+        <td><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/14b-rum-data.png"></a></td>
      </tr>
      <tr>
-        <td>This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligence Traffic Manager Radar JavaScript tags and binds them to a specified VServer</td>
+        <td colspan="3">This stylebook creates a rewrite policy and action on ADC which can be used ot inject the Citrix Intelligent Traffic Manager (ITM) Radar JavaScript tag.  You can optionally bind the generated policy to a specific VServer</td>
      </tr>
      <tr>
-        <td colspan=2>fields with an * are required</td>
+        <td colspan="3">For more infomration about the ITM Radar Tag, see the ITM documenation <a href="https://docs.citrix.com/en-us/citrix-intelligent-traffic-management/radar.html" target="_blank">here</a>.  For more information about Citrix ITM click <a href="https://www.citrix.com/products/citrix-intelligent-traffic-management/" target="_blank">here</a></td>
+     </tr>
+     <tr>
+        <td colspan=3>fields with an * are required</td>
      </tr>
      </table>
     type: object
@@ -44,8 +49,8 @@ parameters:
         name: tagtype
         label: ITM Radar Tag type
         description: |
-         <table style="width:80%;border-spacing: 1px;border: 1px solid black;">
-         <caption>Type Legend</caption>
+         <table style="border-spacing: 1px;border: 1px solid black;">
+         <caption>Radara Tag Type Legend</caption>
          <tr style="color: white;background-color: black;">
            <th>Tag Type</th>
            <th>Description</th>
@@ -56,7 +61,7 @@ parameters:
          </tr>
          <tr>
           <td>Pre-loading Radar Tag</td>
-          <td>his version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td>
+          <td>This version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td>
          </tr>
          </table>
         type: string
