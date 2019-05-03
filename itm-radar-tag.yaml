@@ -23,9 +23,9 @@ parameters:
         <td align="center" width="33%"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/14b-rum-data.png"></td>
      </tr>
      <tr>
-        <td style="word-wrap: break-word" width="33%"><font size="3" face="arial">Citrix collects information from across more than <strong>50,000 networks</strong> daily.</font></td>
-        <td style="word-wrap: break-word" width="33%"><font size="3" face="arial">Over <strong>130 Clouds, CDNs and Datacenters</strong> are measured daily</font></td>
-        <td style="word-wrap: break-word" width="33%"><font size="3" face="arial">Hundreds of millions of clients generate over <strong>14 billion RUM data points</strong> every day.</font></td>
+        <td style="word-wrap: break-word" width="33%">More than <strong>50,000 networks</strong></td>
+        <td style="word-wrap: break-word" width="33%">Over <strong>130 Clouds, CDNs and Datacenters</strong> measured daily</td>
+        <td style="word-wrap: break-word" width="33%">Over <strong>14 billion RUM data points</strong> every day.</font></td>
      </tr>
      <tr>
         <td colspan="3"></td>
@@ -88,7 +88,7 @@ parameters:
   -
     name: vserver-binding
     label: VServer Binding (optional)
-    description: Specify the VServer object you want to bind this policy to.  Typically this is the VServer fronting the application you wish to influence with RUM
+    description: Specify the VServer object you want to bind this policy to.
     type: object
     required: false
     parameters:
