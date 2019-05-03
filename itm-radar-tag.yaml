@@ -18,26 +18,26 @@ parameters:
      <h1>Citrix ITM Radar Tag</h1>
      <table  style="table-layout: fixed; width: 60%; cellpadding="2">
      <tr>
-        <td align="center"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
-        <td align="center"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
-        <td align="center"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/14b-rum-data.png"></td>
+        <td align="center" width="33%"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
+        <td align="center" width="33%"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"></td>
+        <td align="center" width="33%"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/14b-rum-data.png"></td>
      </tr>
      <tr>
-        <td style="word-wrap: break-word"><font size="2" face="arial">Citrix collects information from across more than <strong>50,000 networks</strong> daily.</font></td>
-        <td style="word-wrap: break-word"><font size="2" face="arial">Over <strong>130 Clouds, CDNs and Datacenters</strong> are measured daily</font></td>
-        <td style="word-wrap: break-word"><font size="2" face="arial">Hundreds of millions of clients generate over <strong>14 billion RUM data points</strong> every day.</font></td>
+        <td style="word-wrap: break-word" width="33%"><font size="3" face="arial">Citrix collects information from across more than <strong>50,000 networks</strong> daily.</font></td>
+        <td style="word-wrap: break-word" width="33%"><font size="3" face="arial">Over <strong>130 Clouds, CDNs and Datacenters</strong> are measured daily</font></td>
+        <td style="word-wrap: break-word" width="33%"><font size="3" face="arial">Hundreds of millions of clients generate over <strong>14 billion RUM data points</strong> every day.</font></td>
      </tr>
      <tr>
-        <td colspan="3"><hr/></td>
+        <td colspan="3"></td>
      </tr>
      <tr>
-        <td colspan="3">This stylebook creates a Rewrite policy and action on ADC which can be used ot inject the Citrix Intelligent Traffic Manager (ITM) Real User Measurement JavaScript tag.  You can optionally bind the generated policy to a specific VServer</td>
+        <td colspan="3" style="word-wrap: break-word" width="33%">This stylebook creates a Rewrite policy and action on ADC which can be used ot inject the Citrix Intelligent Traffic Manager (ITM) Real User Measurement JavaScript tag.  You can optionally bind the generated policy to a specific VServer</td>
      </tr>
      <tr>
-        <td colspan="3">For more infomration about the ITM Radar Tag, see the ITM documenation <a href="https://docs.citrix.com/en-us/citrix-intelligent-traffic-management/radar.html" target="_blank">here</a>.  For more information about Citrix ITM click <a href="https://www.citrix.com/products/citrix-intelligent-traffic-management/" target="_blank">here</a></td>
+        <td colspan="3" style="word-wrap: break-word" width="33%">For more infomration about the ITM Radar Tag, see the ITM documenation <a href="https://docs.citrix.com/en-us/citrix-intelligent-traffic-management/radar.html" target="_blank">here</a>.  For more information about Citrix ITM click <a href="https://www.citrix.com/products/citrix-intelligent-traffic-management/" target="_blank">here</a></td>
      </tr>
      <tr>
-        <td colspan=3>If the Rewrite feature is not enabled, this StyleBook will first enable the feature prior to creating the policy and action. Fields marked with an * are required</td>
+        <td colspan="3" style="word-wrap: break-word" width="33%">If the Rewrite feature is not enabled, this StyleBook will first enable the feature prior to creating the policy and action. Fields marked with an * are required</td>
      </tr>
      </table>
     type: object
