@@ -73,7 +73,7 @@ parameters:
          </tr>
          <tr>
           <td width="30%">Pre-loading Radar Tag</td>
-          <td width="70%>This version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td>
+          <td width="70%"">This version of the tag keeps the download of the Radar Client from blocking further parsing of the page, but executes it before the load event has fired. It is mainly for customers using Content Security Policy settings preventing the use of inline JavaScript. It is also for customers using the Video QoS plugin, where the Radar Client needs to load as early as possible.</td>
          </tr>
          </table>
         type: string
