@@ -20,7 +20,7 @@ parameters:
      <tr>
         <td><a href="https://www.citrix.com/products/citrix-intelligent-traffic-management" target="_blank"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/130-datacenters.png"><img src="https://www.citrix.com/content/dam/citrix61/en_us/images/graphics/14b-rum-data.png"></a></td>
      </tr>
-    <tr>
+     <tr>
         <td>This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligence Traffic Manager Radar JavaScript tags and binds them to a specified VServer</td>
      </tr>
      <tr>
