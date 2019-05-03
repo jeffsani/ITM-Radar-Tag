@@ -178,7 +178,7 @@ components:
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
-    name: rewrite-policy-binding-lb
+    name: rewrite-policy-binding-cs
     type: ns::csvserver_rewritepolicy_binding
     condition: $parameters.vserver-binding.vserver.type =="CS"
     properties:
