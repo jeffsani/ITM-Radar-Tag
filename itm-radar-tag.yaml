@@ -163,7 +163,7 @@ components:
     properties:
       name: $parameters.vserver-binding.vserver-name
       policyname: $components.rewrite-policy.properties.name
-      priority: $parameters.vserver-binding.bind-priority
+      priority: str($parameters.vserver-binding.bind-priority)
       gotopriorityexpression: END
       bindpoint: RESPONSE
 outputs:
