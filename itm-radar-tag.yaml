@@ -104,7 +104,7 @@ parameters:
         required: true
       -
         name: vserver-type
-        label: Virtual Server Type
+        label: VServer Type
         description: Type of Virtual Server the policy will be bound to
         type: string
         allowed-values:
@@ -180,7 +180,7 @@ components:
   -
     name: rewrite-policy-binding-cs
     type: ns::csvserver_rewritepolicy_binding
-    condition: $parameters.vserver-binding.vserver.type =="CS"
+    condition: $parameters.vserver-binding.vserver.type == "CS"
     properties:
       name: $parameters.vserver-binding.vserver-name
       policyname: $components.rewrite-policy.properties.name
