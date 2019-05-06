@@ -62,7 +62,7 @@ parameters:
         label: ITM Radar Tag type
         description: |
          <table style="border-spacing: 1px;border: 1px solid black;">
-         <caption>Radar Tag Type Legend</caption>
+         <caption>Radar Tabg Type Legend</caption>
          <tr style="color: white;background-color: black;">
            <th width="30%">Tag Type</th>
            <th width="70%">Description</th>
@@ -119,6 +119,10 @@ parameters:
         type: number
         default: 100
         required: true
+
+substitutions:
+  str-esc(val): str("\"") + $val + str("\"")
+  policy-rule(func, name): $func + "(" + $substitutions.str-esc($name) + ")"
 components:
   -
     name: rewrite-enable-feature-comp
@@ -135,7 +139,7 @@ components:
     properties:
       name: "itm-radar-rewrite-action"
       type: replace_all
-      target: str(HTTP.RES.BODY) + "(" + HTTP.RES.CONTENT_LENGTH + ")" + ")"
+      target: $substitutions.policy-rule("HTTP.RES.BODY", "HTTP.RES.CONTENT_LENGTH")
       stringbuilderexpr: >-
         str("<script>/r/n if (") + "typeof window.addEventListener === \"function\"" + ") {/r/n  window.addEventListener(\"load\", function()) {" + "/r/n" +
         "if window.cedexis === undefined" + " {/r/n" +
@@ -154,7 +158,7 @@ components:
     properties:
        name: "itm-radar-rewrite-action"
        type: replace_all
-       target: str("HTTP.RES.BODY(") + str("HTTP.RES.CONTENT_LENGTH)")
+       target: $substitutions.policy-rule("HTTP.RES.BODY", "HTTP.RES.CONTENT_LENGTH")
        stringbuilderexpr: >-
         str("<script async src=\"//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + str("/radar.js\">") +
         "</script>\r\n</body>"
@@ -165,7 +169,7 @@ components:
     description: The rewrite policy uses the default or preload action based on user selected radar tag type
     properties:
       name: "itm-radar-rewrite-policy"
-      rule: $parameters.itm-radar-tag.tag-rw-policy
+      rule: $substitutions.()$parameters.itm-radar-tag.tag-rw-policy
       action: if-then-else($parameters.itm-radar-tag.tagtype == "Pre-loading", if-then-else($parameters.itm-radar-tag.tagtype != "Default", $components.rewrite-action-preload.properties.name), $components.rewrite-action-default.properties.name)
   -
     name: rewrite-policy-binding-lb
