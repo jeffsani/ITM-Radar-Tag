@@ -140,17 +140,18 @@ components:
       name: "itm-radar-rewrite-action"
       type: insert_before
       target: "HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR("+$substitutions.str-esc("</body>")+")"
-      stringbuilderexpr: |
-        "<script>\r\nif (typeof window.addEventListener === 'function') {\r\n" +
-        "    window.addEventListener('load', function() {\r\n" +
-        "        if (window.cedexis === undefined) {\r\n" +
-        "            var radar = document.createElement('script');\r\n" +
-        "            radar.src = '//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js'; \r\n" +
-        "           document.body.appendChild(radar);\r\n" +
-        "        }\r\n" +
-        "    });\r\n" +
-        "}\r\n" +
-        "</script>\r\n"
+      stringbuilderexpr: >-
+        str("<script>\r\n") +
+        "      if (typeof window.addEventListener === \"function\") {\r\n" +
+        "            window.addEventListener(\"load\", function()) {\r\n" +
+        "                    if window.cedexis === undefined {\r\n" +
+        "                         var radar = document.createElement(\"script\");\r\n" +
+        "                         radar.src = \"//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js\";\r\n" +
+        "                         document.body.appendChild(radar);\r\n" +
+        "                    }\r\n" +
+        "            });\r\n" +
+        "      }\r\n" +
+        "    </script>\r\n" +
   -
     name: rewrite-action-preload
     type: ns::rewriteaction
@@ -159,8 +160,9 @@ components:
       name: "itm-radar-rewrite-action"
       type: insert_before
       target: "HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR("+$substitutions.str-esc("</body>")+")"
-      stringbuilderexpr: |
-        "<script async src='//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js'></script>\r\n"
+      stringbuilderexpr: >-
+        str("<script async src=\"//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + str("/radar.js\">") +
+        "</script>\r\n"
   -
     name: rewrite-policy
     type: ns::rewritepolicy
