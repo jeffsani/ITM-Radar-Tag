@@ -42,7 +42,6 @@ parameters:
      <tr>
         <td colspan="3" style="word-wrap: break-word" width="33%">- If the Rewrite feature is not enabled, this StyleBook will first enable the feature prior to creating the policy and action. Fields marked with an * are required</td>
      </tr>
-
      </table>
     type: object
     required: true
@@ -139,8 +138,8 @@ components:
     properties:
       name: "itm-radar-rewrite-action"
       type: insert_before
-      target: "HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR("+$substitutions.str-esc("</body>")+")"
-      stringbuilderexpr: >-
+      target: "HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(" + $substitutions.str-esc("</body>") + ")"
+      stringbuilderexpr: |
         str("<script>\r\n") +
         "      if (typeof window.addEventListener === \"function\") {\r\n" +
         "            window.addEventListener(\"load\", function()) {\r\n" +
@@ -159,8 +158,8 @@ components:
     properties:
       name: "itm-radar-rewrite-action"
       type: insert_before
-      target: "HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR("+$substitutions.str-esc("</body>")+")"
-      stringbuilderexpr: >-
+      target: "HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(" + $substitutions.str-esc("</body>") + ")"
+      stringbuilderexpr: |
         str("<script async src=\"//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + str("/radar.js\">") +
         "</script>\r\n"
   -
