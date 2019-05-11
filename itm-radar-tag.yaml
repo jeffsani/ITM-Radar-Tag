@@ -150,7 +150,7 @@ components:
         "                    }\r\n" +
         "            });\r\n" +
         "      }\r\n" +
-        "    </script>\r\n" +
+        "    </script>\r\n"
   -
     name: rewrite-action-preload
     type: ns::rewriteaction
