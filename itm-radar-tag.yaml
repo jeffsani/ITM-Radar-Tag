@@ -140,17 +140,17 @@ components:
       type: insert_before
       target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + $substitutions.str-esc("</body>") + ")"
       stringbuilderexpr: >-
-        str("\"") + "<script>\r\n" +
-        "      if (typeof window.addEventListener === " + "'function'" + ") {\r\n" +
-        "            window.addEventListener(" + "'load'" + "), function() {\r\n" +
-        "                    if window.cedexis === undefined {\r\n" +
-        "                         var radar = document.createElement(" + "'script'" + ");\r\n" +
-        "                         radar.src = " + "'//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js\'" + ";\r\n" +
-        "                         document.body.appendChild(radar);\r\n" +
-        "                    }\r\n" +
-        "            });\r\n" +
-        "      }\r\n" +
-        "    </script>\r\n" + str("\"")
+        str("\"") + "<script>\\r\\n" +
+        "      if (typeof window.addEventListener === " + str("\"") + "function" + str("\"") + ") {\\r\\n" +
+        "            window.addEventListener(" + "'load'" + "), function() {\\r\\n" +
+        "                    if window.cedexis === undefined {\\r\\n" +
+        "                         var radar = document.createElement(" + "'script'" + ");\\r\\n" +
+        "                         radar.src = " + str("\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\"") + ";\\r\\n" +
+        "                         document.body.appendChild(radar);\\r\\n" +
+        "                    }\\r\\n" +
+        "            });\\r\\n" +
+        "      }\\r\\n" +
+        "    </script>\\r\\n" + str("\"")
   -
     name: rewrite-action-preload
     type: ns::rewriteaction
@@ -160,7 +160,7 @@ components:
       type: insert_before
       target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + $substitutions.str-esc("</body>") + ")"
       stringbuilderexpr: >-
-        str("\"") + "<script async src=" + "'//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js'" + "></script>\r\n" + str("\"")
+        str("\"") + "<script async src=" + str("\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\"") + "></script>\r\n" + str("\"")
   -
     name: rewrite-policy
     type: ns::rewritepolicy
