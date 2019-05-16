@@ -141,16 +141,16 @@ components:
       target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + $substitutions.str-esc("</body>") + ")"
       stringbuilderexpr: >-
         str("\"") + str("<script>\\r\\n") +
-        "      if (typeof window.addEventListener === " + str("\"") + "function" + str("\"") + ") {\\r\\n" +
-        "            window.addEventListener(" + "'load'" + "), function() {\\r\\n" +
-        "                    if window.cedexis === undefined {\\r\\n" +
-        "                         var radar = document.createElement(" + "'script'" + ");\\r\\n" +
-        "                         radar.src = " + str("\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\"") + ";\\r\\n" +
-        "                         document.body.appendChild(radar);\\r\\n" +
-        "                    }\\r\\n" +
-        "            });\\r\\n" +
-        "      }\\r\\n" +
-        "    </script>\\r\\n" + str("\"")
+        str("      if (typeof window.addEventListener === ") + str("\"") + "function" + str("\"") + str(") {\\r\\n") +
+        str("            "window.addEventListener(")  + str("\"") + "load" + str("\"") + str("), function() {\\r\\n") +
+        str("                    if window.cedexis === undefined {\\r\\n") +
+        str("                         var radar = document.createElement(") + str("\"") + str("script") + str("\"") + str(");\\r\\n") +
+        str("                         radar.src = ") + str("\"") + str("//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + str("/radar.js") + str("\"") + str(";\\r\\n") +
+        str("                         document.body.appendChild(radar);\\r\\n)" +
+        str("                    }\\r\\n") +
+        str("            });\\r\\n") +
+        str("      }\\r\\n") +
+        str("    </script>\\r\\n") + str("\"")
   -
     name: rewrite-action-preload
     type: ns::rewriteaction
@@ -160,7 +160,7 @@ components:
       type: insert_before
       target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + $substitutions.str-esc("</body>") + ")"
       stringbuilderexpr: >-
-        str("\"") + "<script async src=" + str("\"") + str("//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + str("/radar.js") + str("\"") + str("></script>\r\n") + str("\"")
+        str("\"") + "<script async src=" + str("\"") + str("//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + str("/radar.js") + str("\"") + str("></script>\\r\\n") + str("\"")
   -
     name: rewrite-policy
     type: ns::rewritepolicy
