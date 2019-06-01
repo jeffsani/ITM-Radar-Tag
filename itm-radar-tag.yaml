@@ -86,7 +86,7 @@ parameters:
         label: Rewrite Policy
         description: The conditions which need to be met to invoke the rewrite policy that inserts the radar tag.
         type: string
-        default: HTTP.RES.HEADER("Content-Type").TO_LOWER.CONTAINS("text/html")
+        default: HTTP.RES.HEADER(Content-Type).TO_LOWER.CONTAINS(text/html)
         required: true
   -
     name: vserver-binding
@@ -118,10 +118,6 @@ parameters:
         type: number
         default: 100
         required: true
-
-substitutions:
-  str-esc(val): str("\"") + $val + str("\"")
-  policy-rule(func, name): $func + "(" + $substitutions.str-esc($name) + ")"
 components:
   -
     name: rewrite-enable-feature-comp
@@ -138,19 +134,27 @@ components:
     properties:
       name: "itm-radar-rewrite-action"
       type: insert_before
-      target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + $substitutions.str-esc("</body>") + ")"
+      target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + str("\"</body>\"") + ")"
+      #stringbuilderexpr : quotewrap("<script>\r\nif (typeof window.addEventListener===\\\"function\\\") {\r\nwindow.addEventListener(\\\"load\\\", function() {\r\nif window.cedexis === undefined {\r\nvar radar = document.createElement(\\\"script\\\");\r\nradar.src =\\\"//radar.cedexis.com/1/nyid/radar.js\\\"}})}</script>\r\n")
       stringbuilderexpr: >-
-        str("\"") + str("<script>\\r\\n ") +
-        "      if (typeof window.addEventListener === " + str("\"") + "function" + str("\"") + ") {\\r\\n " +
-        "            window.addEventListener(" + str("\"") + "load" + str("\"") + "), function() {\\r\\n " +
-        "                    if window.cedexis === undefined {\\r\\n " +
-        "                         var radar = document.createElement(" + str("\"") + "script" + str("\"") + ");\\r\\n " +
-        "                         radar.src = " + str("\"") + str("\/\/radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\"") + ";\\r\\n" +
-        "                         document.body.appendChild(radar);\\r\\n " +
-        "                    }\\r\\n " +
-        "            });\\r\\n " +
-        "      }\\r\\n " +
-        "    </script>\\r\\n" + str("\"")
+          quotewrap(
+          "<script>\\r\\n" +
+          "      if (typeof window.addEventListener === " + str("\\\"") + "function" + str("\\\"") + ") {\\r\\n" +
+          "            window.addEventListener(" + str("\\\"") + "load" + str("\\\"") + ", function() {\\r\\n" +
+          "                    if window.cedexis === undefined {\\r\\n"
+          ) + "+" +
+          quotewrap(
+          "                         var radar = document.createElement(" + str("\\\"") + "script" + str("\\\"") + ");\\r\\n" +
+          "                         radar.src = " + str("\\\"") + str("//radar.cedexis.com/1/") + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\\\"") +
+          "                         document.body.appendChild(radar)\\r\\n"
+          ) + "+" +
+          quotewrap(
+          "                   }\\r\\n" +
+          "            })\\r\\n" +
+          "      }\\r\\n" +
+          "</script>"
+          )
+
   -
     name: rewrite-action-preload
     type: ns::rewriteaction
@@ -158,15 +162,21 @@ components:
     properties:
       name: "itm-radar-rewrite-action"
       type: insert_before
-      target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + $substitutions.str-esc("</body>") + ")"
-      stringbuilderexpr: str("\"") + "<script async src=" + str("\"") + "\/\/radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "\/radar.js" + str("\"") + "></script>\\r\\n" + str("\"")
+      target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + str("\"</body>\"") + ")"
+      #stringbuilderexpr: str("\"") + "<script async src=" + str("\\\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\\\"") + "></script>\\r\\n" + str("\"")
+      stringbuilderexpr: >-
+          quotewrap(
+          "<script async src=" + str("\\\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\\\"") + ">" +
+          "</script>"
+          )
+
   -
     name: rewrite-policy
     type: ns::rewritepolicy
     description: The rewrite policy uses the default or preload action based on user selected radar tag type
     properties:
       name: "itm-radar-rewrite-policy"
-      rule: $substitutions.str-esc($parameters.itm-radar-tag.tag-rw-policy)
+      rule: str(HTTP.RES.HEADER) + str("(\"Content-Type\").TO_LOWER.CONTAINS(") + str("\"text/html\")")
       action: if-then-else($parameters.itm-radar-tag.tagtype == "Pre-loading", if-then-else($parameters.itm-radar-tag.tagtype != "Default", $components.rewrite-action-preload.properties.name), $components.rewrite-action-default.properties.name)
   -
     name: rewrite-policy-binding-lb
