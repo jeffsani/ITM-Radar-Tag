@@ -1,7 +1,7 @@
 ---
 name: itm-radar-tag
 namespace: com.citrix.adc.stylebooks
-version: "1.2"
+version: "1.0"
 display-name: "Citrix ITM Radar Tag"
 description: "This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligent Traffic Manager Real User Measurement JavaScript tag"
 schema-version: "1.0"
