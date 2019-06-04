@@ -86,6 +86,8 @@ parameters:
         label: Rewrite Policy
         description: The conditions which need to be met to invoke the rewrite policy that inserts the radar tag.
         type: string
+        gui:
+         text-area: true
         default: HTTP.RES.HEADER(Content-Type).TO_LOWER.CONTAINS(text/html)
         required: true
   -
