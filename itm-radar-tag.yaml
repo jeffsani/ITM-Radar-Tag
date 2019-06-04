@@ -202,5 +202,16 @@ components:
       bindpoint: RESPONSE
 outputs:
   -
+    name: itm-rewrite-enable-feature
+    value: $components.rewrite-enable-feature-comp
+  -
     name: itm-radar-rw-policy
     value: $components.rewrite-policy
+  -
+    name: itm-radar-rw-action-preload
+    value: $components.rewrite-action-preload
+    condition: $parameters.itm-radar-tag.tagtype == "Pre-loading"
+  -
+    name: itm-radar-rw-action-default
+    value: $components.rewrite-action-default
+    condition: $parameters.itm-radar-tag.tagtype == "Default"
