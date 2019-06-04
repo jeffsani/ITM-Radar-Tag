@@ -120,8 +120,15 @@ parameters:
         type: number
         default: 100
         required: true
-components:
   -
+    name: test-image
+    label: Host Radar Test Image on ADC (optional)
+    description: Optionally create a responder policy to host the the Radar test jpg on ADC
+    type: object
+    required: false
+
+components:
+ -
     name: rewrite-enable-feature-comp
     type: ns::nsfeature
     description: Enables the REWRITE feature on Citrix ADC
