@@ -128,7 +128,7 @@ parameters:
     required: false
 
 components:
- -
+  -
     name: rewrite-enable-feature-comp
     type: ns::nsfeature
     description: Enables the REWRITE feature on Citrix ADC
