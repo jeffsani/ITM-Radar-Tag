@@ -120,13 +120,12 @@ parameters:
         type: number
         default: 100
         required: true
-  -
-    name: test-image
-    label: Host Radar Test Image on ADC (optional)
-    description: Optionally create a responder policy to host the the Radar test jpg on ADC
-    type: object
-    required: false
-
+     -
+       name: test-image
+       label: Host Radar Test Image on ADC (optional)
+       description: Optionally create a responder policy to host the the Radar performance test gif on ADC
+       type: object
+       required: false
 components:
   -
     name: rewrite-enable-feature-comp
@@ -163,7 +162,6 @@ components:
           "      }\\r\\n" +
           "</script>"
           )
-
   -
     name: rewrite-action-preload
     type: ns::rewriteaction
@@ -178,15 +176,32 @@ components:
           "<script async src=" + str("\\\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\\\"") + ">" +
           "</script>"
           )
-
   -
-    name: rewrite-policy
+    name: itm-rewrite-policy
     type: ns::rewritepolicy
     description: The rewrite policy uses the default or preload action based on user selected radar tag type
     properties:
-      name: "itm-radar-rewrite-policy"
-      rule: str(HTTP.RES.HEADER) + str("(\"Content-Type\").TO_LOWER.CONTAINS(") + str("\"text/html\")")
+      name: "itm-radar-rewrite_pol"
+      rule: $parameters.itm-radar-tag.tag-rw-policy
       action: if-then-else($parameters.itm-radar-tag.tagtype == "Pre-loading", if-then-else($parameters.itm-radar-tag.tagtype != "Default", $components.rewrite-action-preload.properties.name), $components.rewrite-action-default.properties.name)
+ -
+    name: itm-responder-action
+    type: ns::responderaction
+    description: The rewrite policy uses the default or preload action based on user selected radar tag type
+    properties:
+      name: "itm-radar-test-image-responder_act"
+      type: respondwith
+      target: quotewrap("HTTP/1.1 200 OK\r\n" + "Date : " + SYS.TIME + "\r\n" + "Timing-Allow-Origin: *\r\n" + "Content-Type: image/gif\r\n" + "Content-Length: 43\r\n" + "\r\n\r\n" + "GIF89a.............!.......,...........D..;")
+      comment: "itm radar performance test image object"
+    -
+      name: itm-responder-policy
+      type: ns::responderpolicy
+      description: The rewrite policy uses the default or preload action based on user selected radar tag type
+      properties:
+        name: "itm-radar-test-image-responder_pol"
+        rule: str(HTTP.REQ.URL.PATH.GET_REVERSE(0).EQ(") + str(\"r20.gif\")")
+        action: $components.itm-responder.action.name
+        comment: "itm radar performance test image object"
   -
     name: rewrite-policy-binding-lb
     type: ns::lbvserver_rewritepolicy_binding
@@ -212,9 +227,6 @@ outputs:
     name: itm-rewrite-enable-feature
     value: $components.rewrite-enable-feature-comp
   -
-    name: itm-radar-rw-policy
-    value: $components.rewrite-policy
-  -
     name: itm-radar-rw-action-preload
     value: $components.rewrite-action-preload
     condition: $parameters.itm-radar-tag.tagtype == "Pre-loading"
@@ -222,3 +234,22 @@ outputs:
     name: itm-radar-rw-action-default
     value: $components.rewrite-action-default
     condition: $parameters.itm-radar-tag.tagtype == "Default"
+  -
+    name: itm-radar-rw-policy
+    value: $components.itm-rewrite-policy
+  -
+    name: itm-radar-res-action
+    value: $components.itm-responder-action
+    condition: $parameters.vserver-binding.test-image
+  -
+    name: itm-radar-res-policy
+    value: $components.itm-responder-policy
+    condition: $parameters.vserver-binding.test-image
+  -
+    name: rewrite-policy-binding-lb
+    value: $components.rewrite-policy-binding-lb
+    condition: $parameters.vserver-binding
+  -
+    name: rewrite-policy-binding-cs
+    value: $components.rewrite-policy-binding-cs
+    condition: $parameters.vserver-binding
