@@ -10,6 +10,10 @@ import-stylebooks:
     namespace: netscaler.nitro.config
     prefix: ns
     version: "11.0"
+  -
+    namespace: com.citrix.adc.commontypes
+    prefix: cmtypes
+    version: "1.0"
 parameters:
   -
     name: itm-radar-tag
@@ -121,30 +125,29 @@ parameters:
         type: number
         default: 100
         required: true
-     -
-       name: test-image
-       label: Host Radar Test Image on ADC (optional)
-       description: Optionally create a responder policy and action to host the the Radar performance test gif on ADC
-       type: object
-       required: false
-       parameters:
-        -
-           name: responder-policy
-           label: ITM Radar Test Image Responder Policy
-           description: The conditions which need to be met to invoke the responder policy for the test image
-           type: string
-           gui:
-            text-area: true
-           default: HTTP.REQ.URL.PATH.GET_REVERSE(0).SET_TEXT_MODE(IGNORECASE).EQ("r20.gif")
-           required: true
-         -
-           name: responder-bind-priority
-           label: VServer Binding Priority
-           description: The priority to use when binding the responder policy to the specified VServer
-           type: number
-           default: 100
-           required: true
-
+      -
+        name: test-image
+        label: Host Radar Test Image on ADC (optional)
+        description: Optionally create a responder policy and action to host the the Radar performance test gif on ADC
+        type: object
+        required: false
+        parameters:
+          -
+            name: responder-policy
+            label: ITM Radar Test Image Responder Policy
+            description: The conditions which need to be met to invoke the responder policy for the test image
+            type: string
+            gui:
+             text-area: true
+            default: HTTP.REQ.URL.PATH.GET_REVERSE(0).SET_TEXT_MODE(IGNORECASE).EQ("r20.gif")
+            required: true
+          -
+            name: responder-bind-priority
+            label: VServer Binding Priority
+            description: The priority to use when binding the responder policy to the specified VServer
+            type: number
+            default: 100
+            required: true
 components:
   -
     name: rewrite-enable-feature-comp
@@ -160,9 +163,8 @@ components:
     condition: $parameters.itm-radar-tag.tagtype == "Default"
     properties:
       name: "itm-radar-rewrite-action"
-      type: insert_before
+      type: insert_after
       target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + str("\"</body>\"") + ")"
-      #stringbuilderexpr : quotewrap("<script>\r\nif (typeof window.addEventListener===\\\"function\\\") {\r\nwindow.addEventListener(\\\"load\\\", function() {\r\nif window.cedexis === undefined {\r\nvar radar = document.createElement(\\\"script\\\");\r\nradar.src =\\\"//radar.cedexis.com/1/nyid/radar.js\\\"}})}</script>\r\n")
       stringbuilderexpr: >-
           quotewrap(
           "<script>\\r\\n" +
@@ -187,9 +189,8 @@ components:
     condition: $parameters.itm-radar-tag.tagtype == "Pre-loading"
     properties:
       name: "itm-radar-rewrite-action"
-      type: insert_before
+      type: insert_after
       target: str("HTTP.RES.BODY(HTTP.RES.CONTENT_LENGTH).SET_TEXT_MODE(IGNORECASE).BEFORE_STR(") + str("\"</body>\"") + ")"
-      #stringbuilderexpr: str("\"") + "<script async src=" + str("\\\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\\\"") + "></script>\\r\\n" + str("\"")
       stringbuilderexpr: >-
           quotewrap(
           "<script async src=" + str("\\\"") + "//radar.cedexis.com/1/" + str($parameters.itm-radar-tag.tagid) + "/radar.js" + str("\\\"") + ">" +
@@ -203,24 +204,27 @@ components:
       name: "itm-radar-rewrite_pol"
       rule: $parameters.itm-radar-tag.tag-rw-policy
       action: if-then-else($parameters.itm-radar-tag.tagtype == "Pre-loading", if-then-else($parameters.itm-radar-tag.tagtype != "Default", $components.rewrite-action-preload.properties.name), $components.rewrite-action-default.properties.name)
- -
+  -
     name: itm-responder-action
     type: ns::responderaction
-    description: The rewrite policy uses the default or preload action based on user selected radar tag type
+    description: This rewrite action responds with the 1x1 pixel gif image payload from the ITM radar performance test query
     properties:
       name: "itm-radar-test-image-responder_act"
       type: respondwith
-      target: quotewrap("HTTP/1.1 200 OK\r\n" + "Date : " + SYS.TIME + "\r\n" + "Timing-Allow-Origin: *\r\n" + "Content-Type: image/gif\r\n" + "Content-Length: 43\r\n" + "\r\n\r\n" + "GIF89a.............!.......,...........D..;")
+      target: >-
+        quotewrap(
+        "HTTP/1.1 200 OK\r\n" + "Date:" + SYS.TIME + "\r\n" + "Cache-Control: no-cache\r\n" + "Pragma: no-cache\r\n" + "Expires: 0\r\n" + "Timing-Allow-Origin: *\r\n" + "Content-Type: image/gif\r\n" + "Content-Length: 43" + "\r\n\r\n" + "\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x00\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b)
+        )
       comment: "itm radar performance test image object"
-    -
-      name: itm-responder-policy
-      type: ns::responderpolicy
-      description: The rewrite policy uses the default or preload action based on user selected radar tag type
-      properties:
-        name: "itm-radar-test-image-responder_pol"
-        rule: str(HTTP.REQ.URL.PATH.GET_REVERSE(0).EQ(") + str(\"r20.gif\")")
-        action: $components.itm-responder.action.name
-        comment: "itm radar performance test image object"
+  -
+    name: itm-responder-policy
+    type: ns::responderpolicy
+    description: This rewrite policy matches the inbound query for the ITM Radar test image
+    properties:
+      name: "itm-radar-test-image-responder_pol"
+      rule: str(HTTP.REQ.URL.PATH.GET_REVERSE(0).SET_TEXT_MODE(IGNORECASE).EQ(") + str(\"r20.gif\")")
+      action: $components.itm-responder.action.name
+      comment: "itm radar performance test image object"
   -
     name: rewrite-policy-binding-lb
     type: ns::lbvserver_rewritepolicy_binding
@@ -238,6 +242,16 @@ components:
     properties:
       name: $parameters.vserver-binding.vserver-name
       policyname: $components.rewrite-policy.properties.name
+      priority: $parameters.vserver-binding.rewrite-bind-priority
+      gotopriorityexpression: END
+      bindpoint: RESPONSE
+  -
+    name: rewrite-policy-binding-vpn
+    type: ns::vpnvserver_rewritepolicy_binding
+    condition: $parameters.vserver-binding.vserver-type == "VPN"
+    properties:
+      name: $parameters.vserver-binding.vserver-name
+      policy: $components.rewrite-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -261,7 +275,16 @@ components:
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
-
+  -
+    name: responder-policy-binding-vpn
+    type: ns::vpnvserver_responderpolicy_binding
+    condition: $parameters.vserver-binding.vserver-type == "VPN"
+    properties:
+      name: $parameters.vserver-binding.vserver-name
+      policyname: $components.rewrite-policy.properties.name
+      priority: $parameters.vserver-binding.rewrite-bind-priority
+      gotopriorityexpression: END
+      bindpoint: RESPONSE
 outputs:
   -
     name: itm-rewrite-enable-feature
