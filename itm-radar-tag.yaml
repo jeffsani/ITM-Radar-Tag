@@ -110,12 +110,35 @@ parameters:
       -
         name: vserver-type
         label: VServer Type
-        description: Type of Virtual Server the policy will be bound to
+        description: |
+          <table style="border-spacing: 1px;border: 1px solid black;">
+          <caption>Binding Legend</caption>
+          <tr style="color: white;background-color: black;">
+            <th width="30%">Bind Type</th>
+            <th width="70%">Description</th>
+          </tr>
+          <tr>
+            <td width="20%">LB</td>
+            <td width="80%">Load Balancing VServer</td>
+          <tr>
+           <td width="20%">CS</td>
+           <td width="80%"">Content Switching or Unified Gateway VServer</td>
+          </tr>
+          <tr>
+           <td width="20%">VPN</td>
+           <td width="80%"">Gateway VServer</td>
+          </tr>
+          <tr>
+            <td width="20%">Global</td>
+            <td width="80%"">Global Override</td>
+          </tr>
+          </table>
         type: string
         allowed-values:
          - "LB"
          - "CS"
          - "VPN"
+         - "Global"
         default: "LB"
         required: true
       -
@@ -256,6 +279,15 @@ components:
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
+    name: rewrite-policy-binding-global
+    type: ns::rewriteglobal_rewritepolicy_binding
+    condition: $parameters.vserver-binding.vserver-type == "GLOBAL"
+    properties:
+      policyname: $components.rewrite-policy.properties.name
+      priority: $parameters.vserver-binding.rewrite-bind-priority
+      type: "RES_OVERRIDE"
+      gotopriorityexpression: END
+  -
     name: responder-policy-binding-lb
     type: ns::lbvserver_responderpolicy_binding
     condition: $parameters.vserver-binding.vserver-type == "LB"
@@ -271,7 +303,7 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "CS"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policyname: $components.rewrite-policy.properties.name
+      policyname: $components.responder-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -281,10 +313,20 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "VPN"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policyname: $components.rewrite-policy.properties.name
+      policyname: $components.responder-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
+  -
+    name: responder-policy-binding-global
+    type: ns::responderglobal_responderpolicy_binding
+    condition: $parameters.vserver-binding.vserver-type == "GLOBAL"
+    properties:
+      policyname: $components.responder-policy.properties.name
+      priority: $parameters.vserver-binding.rewrite-bind-priority
+      type: "RES_OVERRIDE"
+      gotopriorityexpression: END
+
 outputs:
   -
     name: itm-rewrite-enable-feature
