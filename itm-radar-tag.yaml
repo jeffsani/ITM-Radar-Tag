@@ -236,7 +236,7 @@ components:
       type: respondwith
       target: >-
         quotewrap(
-        "HTTP/1.1 200 OK\r\n" + "Date:" + SYS.TIME + "\r\n" + "Cache-Control: no-cache\r\n" + "Pragma: no-cache\r\n" + "Expires: 0\r\n" + "Timing-Allow-Origin: *\r\n" + "Content-Type: image/gif\r\n" + "Content-Length: 43" + "\r\n\r\n" + "\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x00\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b)
+        "HTTP/1.1 200 OK\r\n" + "Date:" + SYS.TIME + "\r\n" + "Cache-Control: no-cache\r\n" + "Pragma: no-cache\r\n" + "Expires: 0\r\n" + "Timing-Allow-Origin: *\r\n" + "Content-Type: image/gif\r\n" + "Content-Length: 43" + "\r\n\r\n" + "\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x00\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b")
         )
       comment: "itm radar performance test image object"
   -
