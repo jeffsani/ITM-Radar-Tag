@@ -95,10 +95,10 @@ parameters:
         default: "HTTP.RES.HEADER(\"Content-Type\").TO_LOWER.CONTAINS(\"text/html\")"
         required: true
   -
-    name: vserver-binding
+    name: vserver-bindings
     label: VServer Binding (optional)
     description: Specify the VServer object you want to bind this policy to.
-    type: object
+    type: object[]
     required: false
     parameters:
       -
@@ -253,79 +253,95 @@ components:
   -
     name: rewrite-policy-binding-lb
     type: ns::lbvserver_rewritepolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "LB"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "LB"
     properties:
-      name: $parameters.vserver-binding.vserver-name
+      name: $binding.vserver-name
       policyname: $components.itm-rewrite-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
     name: rewrite-policy-binding-cs
     type: ns::csvserver_rewritepolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "CS"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "CS"
     properties:
-      name: $parameters.vserver-binding.vserver-name
+      name: $binding.vserver-name
       policyname: $components.itm-rewrite-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
     name: rewrite-policy-binding-vpn
     type: ns::vpnvserver_rewritepolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "VPN"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "VPN"
     properties:
-      name: $parameters.vserver-binding.vserver-name
+      name: $binding.vserver-name
       policy: $components.itm-rewrite-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
     name: rewrite-policy-binding-global
     type: ns::rewriteglobal_rewritepolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "GLOBAL"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "GLOBAL"
     properties:
       policyname: $components.itm-rewrite-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       type: "RES_OVERRIDE"
       gotopriorityexpression: END
   -
     name: responder-policy-binding-lb
     type: ns::lbvserver_responderpolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "LB"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "LB"
     properties:
-      name: $parameters.vserver-binding.vserver-name
+      name: $binding.vserver-name
       policyname: $components.itm-responder-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
     name: responder-policy-binding-cs
     type: ns::csvserver_responderpolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "CS"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "CS"
     properties:
-      name: $parameters.vserver-binding.vserver-name
+      name: $binding.vserver-name
       policyname: $components.itm-responder-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
     name: responder-policy-binding-vpn
     type: ns::vpnvserver_responderpolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "VPN"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "VPN"
     properties:
-      name: $parameters.vserver-binding.vserver-name
+      name: $binding.vserver-name
       policy: $components.itm-responder-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
   -
     name: responder-policy-binding-global
     type: ns::responderglobal_responderpolicy_binding
-    condition: $parameters.vserver-binding.vserver-type == "GLOBAL"
+    repeat: $parameters.vserver-bindings
+    repeat-item: binding
+    repeat-condition: $binding.vserver-type == "GLOBAL"
     properties:
       policyname: $components.itm-responder-policy.properties.name
-      priority: $parameters.vserver-binding.rewrite-bind-priority
+      priority: $binding.rewrite-bind-priority
       type: "RES_OVERRIDE"
       gotopriorityexpression: END
 
@@ -347,16 +363,16 @@ outputs:
   -
     name: itm-radar-res-action
     value: $components.itm-responder-action
-    condition: $parameters.vserver-binding.test-image
+    condition: $parameters.vserver-bindings
   -
     name: itm-radar-res-policy
     value: $components.itm-responder-policy
-    condition: $parameters.vserver-binding.test-image
+    condition: $parameters.vserver-bindings
   -
     name: rewrite-policy-binding-lb
     value: $components.rewrite-policy-binding-lb
-    condition: $parameters.vserver-binding
+    condition: $parameters.vserver-bindings
   -
     name: rewrite-policy-binding-cs
     value: $components.rewrite-policy-binding-cs
-    condition: $parameters.vserver-binding
+    condition: $parameters.vserver-bindings
