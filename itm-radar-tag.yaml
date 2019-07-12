@@ -1,7 +1,7 @@
 ---
 name: itm-radar-tag
 namespace: com.citrix.adc.stylebooks
-version: "1.1"
+version: "1.0"
 display-name: "Citrix ITM Radar Tag"
 description: "This stylebook creates the required rewrite policy and action on Citrix ADC to create the Citrix Intelligent Traffic Manager Real User Measurement JavaScript tag"
 schema-version: "1.0"
@@ -92,7 +92,7 @@ parameters:
         type: string
         gui:
          text-area: true
-        default: HTTP.RES.HEADER(Content-Type).TO_LOWER.CONTAINS(text/html)
+        default: "HTTP.RES.HEADER("Content-Type").TO_LOWER.CONTAINS("text/html")"
         required: true
   -
     name: vserver-binding
@@ -236,7 +236,7 @@ components:
       type: respondwith
       target: >-
         quotewrap(
-        "HTTP/1.1 200 OK\r\n" + "Date:" + SYS.TIME + "\r\n" + "Cache-Control: no-cache\r\n" + "Pragma: no-cache\r\n" + "Expires: 0\r\n" + "Timing-Allow-Origin: *\r\n" + "Content-Type: image/gif\r\n" + "Content-Length: 43" + "\r\n\r\n" + "\x47\x49\x46\x38\x39\x61\x01\x00\x01\x00\x80\x00\x00\xff\xff\xff\x00\x00\x00\x21\xf9\x04\x00\x00\x00\x00\x00\x2c\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02\x44\x01\x00\x3b")
+        "HTTP/1.1 200 OK\\r\\n" + "Date:" + "SYS.TIME" + str("\\r\\n") + "Cache-Control: no-cache\\r\\n" + "Pragma: no-cache\\r\\n" + "Expires: 0\\r\\n" + "Timing-Allow-Origin: *\\r\\n" + "Content-Type: image/gif\\r\\n" + "Content-Length: 43" + "\\r\\n\\r\\n" + "\\x47\\x49\\x46\\x38\\x39\\x61\\x01\\x00\\x01\\x00\\x80\\x00\\x00\\xff\\xff\\xff\\x00\\x00\\x00\\x21\\xf9\\x04\\x00\\x00\\x00\\x00\\x00\\x2c\\x00\\x00\\x00\\x00\\x01\\x00\\x01\\x00\\x00\\x02\\x02\\x44\\x01\\x00\\x3b"
         )
       comment: "itm radar performance test image object"
   -
@@ -245,8 +245,8 @@ components:
     description: This rewrite policy matches the inbound query for the ITM Radar test image
     properties:
       name: "itm-radar-test-image-responder_pol"
-      rule: str(HTTP.REQ.URL.PATH.GET_REVERSE(0).SET_TEXT_MODE(IGNORECASE).EQ(") + str(\"r20.gif\")")
-      action: $components.itm-responder.action.name
+      rule: str(HTTP.REQ.URL.PATH.GET_REVERSE) + "(0).SET_TEXT_MODE" + "(IGNORECASE).EQ" + "(\"r20.gif\")"
+      action: $components.itm-responder-action.properties.name
       comment: "itm radar performance test image object"
   -
     name: rewrite-policy-binding-lb
@@ -254,7 +254,7 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "LB"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policyname: $components.rewrite-policy.properties.name
+      policyname: $components.itm-rewrite-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -264,7 +264,7 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "CS"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policyname: $components.rewrite-policy.properties.name
+      policyname: $components.itm-rewrite-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -274,7 +274,7 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "VPN"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policy: $components.rewrite-policy.properties.name
+      policy: $components.itm-rewrite-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -283,7 +283,7 @@ components:
     type: ns::rewriteglobal_rewritepolicy_binding
     condition: $parameters.vserver-binding.vserver-type == "GLOBAL"
     properties:
-      policyname: $components.rewrite-policy.properties.name
+      policyname: $components.itm-rewrite-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       type: "RES_OVERRIDE"
       gotopriorityexpression: END
@@ -293,7 +293,7 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "LB"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policyname: $components.responder-policy.properties.name
+      policyname: $components.itm-responder-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -303,7 +303,7 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "CS"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policyname: $components.responder-policy.properties.name
+      policyname: $components.itm-responder-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -313,7 +313,7 @@ components:
     condition: $parameters.vserver-binding.vserver-type == "VPN"
     properties:
       name: $parameters.vserver-binding.vserver-name
-      policyname: $components.responder-policy.properties.name
+      policy: $components.itm-responder-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       gotopriorityexpression: END
       bindpoint: RESPONSE
@@ -322,7 +322,7 @@ components:
     type: ns::responderglobal_responderpolicy_binding
     condition: $parameters.vserver-binding.vserver-type == "GLOBAL"
     properties:
-      policyname: $components.responder-policy.properties.name
+      policyname: $components.itm-responder-policy.properties.name
       priority: $parameters.vserver-binding.rewrite-bind-priority
       type: "RES_OVERRIDE"
       gotopriorityexpression: END
