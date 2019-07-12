@@ -151,7 +151,9 @@ parameters:
       -
         name: test-image
         label: Host Radar Test Image on ADC (optional)
-        description: Optionally create a responder policy and action to host the the Radar performance test gif on ADC
+        description: |
+           Optionally create a responder policy and action to host the the Radar performance test gif on ADC. |
+           Note - you may need to run # nsapimgr_wr.sh -ys arg1=1 -ys call=ns_pi_set_char_is_byte on the target ADC prior to config creation
         type: object
         required: false
         parameters:
